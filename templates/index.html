@@ -62,39 +62,44 @@
             <button id="send-button">Send</button>
         </div>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
     <script>
-    // JavaScript functionality can be added here
-    const messageInput = document.getElementById("message-input");
-    const sendButton = document.getElementById("send-button");
-    const chatMessages = document.querySelector(".chat-messages");
+       const messageInput = document.getElementById("message-input");
+const sendButton = document.getElementById("send-button");
+const chatMessages = document.querySelector(".chat-messages");
 
-    sendButton.addEventListener("click", sendMessage);
+const socket = io.connect("127.0.0.1:5000"); 
 
-    messageInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
-    });
+// Function to add a new message to the chat
+function addMessage(text) {
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+    messageDiv.textContent = text;
+    chatMessages.appendChild(messageDiv);
+}
 
-    function sendMessage() {
-        const userMessage = messageInput.value.trim();
-        if (userMessage !== "") {
-            addMessage(userMessage);
-            // You can add logic to send the user's message to the server here
-            // and receive a response from the bot or other users..
-            messageInput.value = "";
-            // Scroll to the bottom of the chat window to show the latest message
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+// Function to send a message to the server using Socket.IO
+function sendMessage() {
+    const userMessage = messageInput.value.trim();
+    if (userMessage !== "") {
+        socket.emit('message', { message: userMessage });
+        messageInput.value = "";
     }
+}
 
-    function addMessage(text) {
-        const messageDiv = document.createElement("div");
-        messageDiv.classList.add("message");
-        messageDiv.textContent = text;
-        chatMessages.appendChild(messageDiv);
+// Attach event listeners
+sendButton.addEventListener("click", sendMessage);
+
+messageInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        sendMessage();
     }
-</script>
+});
+
+// Listen for incoming messages from the server
+socket.on('message', function (message) {
+    addMessage(message);
+});
+    </script>
 </body>
 </html>
