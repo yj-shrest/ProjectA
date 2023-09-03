@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPEN CHAT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .chat-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px;
+        }
+        .message {
+            background-color: #f2f2f2;
+            padding: 5px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .input-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px;
+        }
+        #message-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #send-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-messages">
+        </div>
+        <div class="input-container">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+    // JavaScript functionality can be added here
+    const messageInput = document.getElementById("message-input");
+    const sendButton = document.getElementById("send-button");
+    const chatMessages = document.querySelector(".chat-messages");
+
+    sendButton.addEventListener("click", sendMessage);
+
+    messageInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    function sendMessage() {
+        const userMessage = messageInput.value.trim();
+        if (userMessage !== "") {
+            addMessage(userMessage);
+            // You can add logic to send the user's message to the server here
+            // and receive a response from the bot or other users..
+            messageInput.value = "";
+            // Scroll to the bottom of the chat window to show the latest message
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+
+    function addMessage(text) {
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message");
+        messageDiv.textContent = text;
+        chatMessages.appendChild(messageDiv);
+    }
+</script>
+</body>
+</html>
